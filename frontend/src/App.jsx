@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Rating, Spinner } from 'flowbite-react';
+import MoviesFilter from './components/MoviesFilter';
 
 const App = props => {
+  const [allMovies, setAllMovies] = useState([]);
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -12,6 +14,7 @@ const App = props => {
       .then(response => response.json())
       .then(data => {
         setMovies(data);
+        setAllMovies(data);
         setLoading(false);
       });
   }
@@ -23,7 +26,7 @@ const App = props => {
   return (
     <Layout>
       <Heading />
-
+      <MoviesFilter loading={loading} allMovies={allMovies} setFilteredMovies={setMovies} />
       <MovieList loading={loading}>
         {movies.map((item, key) => (
           <MovieItem key={key} {...item} />
@@ -89,19 +92,19 @@ const MovieItem = props => {
         <div className="grow mb-3 last:mb-0">
           {props.year || props.rating
             ? <div className="flex justify-between align-middle text-gray-900 text-xs font-medium mb-2">
-                <span>{props.year}</span>
+              <span>{props.year}</span>
 
-                {props.rating
-                  ? <Rating>
-                      <Rating.Star />
+              {props.rating
+                ? <Rating>
+                  <Rating.Star />
 
-                      <span className="ml-0.5">
-                        {props.rating}
-                      </span>
-                    </Rating>
-                  : null
-                }
-              </div>
+                  <span className="ml-0.5">
+                    {props.rating}
+                  </span>
+                </Rating>
+                : null
+              }
+            </div>
             : null
           }
 
@@ -116,13 +119,13 @@ const MovieItem = props => {
 
         {props.wikipediaUrl
           ? <Button
-              color="light"
-              size="xs"
-              className="w-full"
-              onClick={() => window.open(props.wikipediaUrl, '_blank')}
-            >
-              More
-            </Button>
+            color="light"
+            size="xs"
+            className="w-full"
+            onClick={() => window.open(props.wikipediaUrl, '_blank')}
+          >
+            More
+          </Button>
           : null
         }
       </div>
