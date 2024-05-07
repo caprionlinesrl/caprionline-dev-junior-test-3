@@ -1,6 +1,6 @@
 import React from "react";
 
-const Heading = props => {
+const Heading:React.FC = props => {
 	return (
 		<div className="mx-auto max-w-screen-sm text-center">
 			<h1 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">

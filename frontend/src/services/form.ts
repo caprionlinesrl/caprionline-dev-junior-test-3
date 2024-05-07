@@ -1,18 +1,19 @@
-const getFormProps = async (event) => {
+import { FormPropsInterface } from "./interface/formPropsInterface";
+
+const getFormProps = (event: React.FormEvent<HTMLFormElement>):FormPropsInterface|null => {
     try {
         event.preventDefault();
-        event.stopPropagation();
+        event.stopPropagation();        
+        const formData = new FormData(event.currentTarget);
 
-        // Crea un'istanza di FormData dal form event.target
-        const formData = new FormData(event.target);
-
-        // Crea un oggetto semplice dai dati del FormData
+        // @ts-ignore
         const formProps = Object.fromEntries(formData.entries());
         return formProps;
         
     } catch (error) {
-        return false;
+        console.error(error);
+        return null;
     }
 };
 
-export {getFormProps};
+export { getFormProps };

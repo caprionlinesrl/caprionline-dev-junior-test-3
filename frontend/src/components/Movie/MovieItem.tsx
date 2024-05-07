@@ -1,7 +1,8 @@
 import React                from "react";
 import { Button, Rating }   from "flowbite-react";
+import { MovieInterface } from "../../api/interface/movieInterface";
 
-const MovieItem = props => {
+const MovieItem:React.FC<MovieInterface> = props => {
 	return (
 		<div className="flex flex-col w-full h-full rounded-lg shadow-md lg:max-w-sm">
 			<div className="grow">
@@ -12,7 +13,6 @@ const MovieItem = props => {
 					loading="lazy"
 				/>
 			</div>
-
 			<div className="grow flex flex-col h-full p-3">
 				<div className="grow mb-3 last:mb-0">
 					{props.year || props.rating
@@ -32,7 +32,6 @@ const MovieItem = props => {
 						</div>
 						: null
 					}
-
 					<h3 className="text-gray-900 text-lg leading-tight font-semibold mb-1">
 						{props.title}
 					</h3>

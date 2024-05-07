@@ -1,6 +1,14 @@
 import React from "react";
+import { GenresInterface } from "../../api/interface/genreInterface";
+import { ActorsInterface } from "../../api/interface/actorInterface";
 
-const FilterMovies = ({ genres, actors, handleSubmitForm }) => { 
+interface FilterMoviesProps {
+    genres:GenresInterface, 
+    actors:ActorsInterface, 
+    handleSubmitForm: (event:React.FormEvent<HTMLFormElement>) => void
+}
+
+const FilterMovies:React.FC<FilterMoviesProps> = ({ genres, actors, handleSubmitForm }) => { 
     return (
         <div className="max-auto mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             <form onSubmit={(event) => { handleSubmitForm(event)} }>

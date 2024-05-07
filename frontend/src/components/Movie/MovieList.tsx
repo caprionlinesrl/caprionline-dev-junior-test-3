@@ -1,7 +1,12 @@
 import React        from "react";
 import { Spinner }  from "flowbite-react";
 
-const MovieList = props => {
+interface MovieListProps {
+	loading:boolean,
+	children:any
+}
+
+const MovieList:React.FC<MovieListProps> = props => {
 	if (props.loading) {
 		return (
 			<div className="text-center">
