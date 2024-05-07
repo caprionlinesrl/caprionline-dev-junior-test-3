@@ -7,8 +7,7 @@ Benvenuto nelle istruzioni per configurare il tuo ambiente di sviluppo utilizzan
 Prima di iniziare, assicurati di avere installato Docker e Git sul tuo computer. Se non li hai già installati, puoi scaricare Docker dal sito ufficiale https://www.docker.com/products/docker-desktop e Git dal sito ufficiale https://git-scm.com/downloads.
 
 ## Per gli utenti Windows
-Se utilizzi Windows, devi installare WSL (Windows Subsystem for Linux) https://learn.microsoft.com/it-it/windows/wsl/. 
-Ogni volta che hai bisogno di aprire un nuovo terminale, dalla PowerShell di Windows esegui il comando `wsl -u NOME_UTENTE --cd /home/NOME_UTENTE`
+I comandi indicati vanno eseguiti in una PowerShell per il backend ed in un'altra PowerShell per il frontend.
 
 ## Fork e setup iniziale
 Effettua il fork di questo repository tramite [questo link](https://github.com/caprionlinesrl/caprionline-dev-junior-test-3/fork) oppure cliccando sul pulsante "Fork" nella pagina del repository su GitHub. In questo modo verrà creata una copia del repository all'interno del tuo account GitHub, sulla quale potrai lavorare liberamente.
@@ -30,7 +29,8 @@ Apri un terminale ed esegui i seguenti comandi per la configurazione del backend
 ```
 cd backend
 docker compose up -d
-./scripts/shell.sh
+(Utenti MacOS/Linux): ./scripts/shell.sh
+(Utenti Windows): ./scripts/shell.bat
 composer install
 ./scripts/db_init.sh
 symfony server:start -d
@@ -41,7 +41,9 @@ Apri un altro terminale ed esegui i seguenti comandi per la configurazione del f
 ```
 cd frontend
 docker compose up -d
-./scripts/shell.sh
+(Utenti MacOS/Linux): ./scripts/shell.sh
+(Utenti Windows): ./scripts/shell.bat
+composer install
 npm install
 npm run dev
 ```
