@@ -4,17 +4,20 @@ namespace App\Entity;
 
 use App\Repository\GenreRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: GenreRepository::class)]
-#[ORM\Table('genres')]
+#[ORM\Table("genres")]
 class Genre
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
+    #[Groups(['default'])]  // Assicurati che l'id sia incluso nel gruppo di serializzazione "default"
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['default'])]  // Assicurati che il nome sia incluso nel gruppo di serializzazione "default"
     private ?string $name = null;
 
     public function getId(): ?int
@@ -27,10 +30,9 @@ class Genre
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
-
         return $this;
     }
 }
