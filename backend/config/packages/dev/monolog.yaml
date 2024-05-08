@@ -1,0 +1,9 @@
+monolog:
+    handlers:
+        main:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: warning
+            buffer_size: 50
+            max_files: 1
+            channels: ['!event', '!doctrine', '!console']        

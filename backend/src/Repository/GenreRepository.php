@@ -21,6 +21,15 @@ class GenreRepository extends ServiceEntityRepository
         parent::__construct($registry, Genre::class);
     }
 
+    public function findByParams( ?string $order = 'asc', ?bool $toArray = false): array
+    {
+        $qb = $this->createQueryBuilder('g');            
+        $qb->addOrderBy('g.name', $order);
+                
+        $query = $qb->getQuery();
+        return $toArray ? $query->getArrayResult() : $query->getResult();        
+    }
+
     //    /**
     //     * @return Genre[] Returns an array of Genre objects
     //     */

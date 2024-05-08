@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Movie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\DBAL\ForwardCompatibility\Result;
+use MovieSearchParams;
 
 /**
  * @extends ServiceEntityRepository<Movie>
@@ -19,6 +21,31 @@ class MovieRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Movie::class);
+    }
+
+    public function findByFilter(MovieSearchParams $filters, ?bool $toArray = false): array
+{
+        $qb = $this->createQueryBuilder('m');
+
+        if ($filters->getGenreId() !== null) {
+            $qb->innerJoin('m.movieGenres', 'mg')->andWhere('mg.genre = :genreId')->setParameter('genreId', $filters->getGenreId());
+        }
+
+        if ($filters->getActorId() !== null) {
+            $qb->innerJoin('m.movieActors', 'ma')->andWhere('ma.actor = :actorId')->setParameter('actorId', $filters->getActorId());
+        }
+
+        if ($filters->getReleaseDate() !== null) {
+            $qb->addOrderBy('m.releaseDate', $filters->getReleaseDate());
+        }
+
+        if ($filters->getRating() !== null) {
+            $qb->addOrderBy('m.rating', $filters->getRating());
+        }
+
+        $query = $qb->getQuery();
+
+        return $toArray ? $query->getArrayResult() : $query->getResult();
     }
 
     //    /**
