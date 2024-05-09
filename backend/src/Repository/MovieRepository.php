@@ -46,11 +46,15 @@ class MovieRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    public function filterBy($filterBy, $order){
+    public function filterBy($filterBy, $order, $genre){
         return $this->createQueryBuilder('m')
+        ->select('m')
+        ->leftJoin('m.movieGenres', 'mg')
+        ->leftJoin('mg.genre', 'g')
         ->orderBy("m.".$filterBy, $order)
+        ->andWhere('mg.genre = :genre')
+        ->setParameter('genre', $genre)
         ->getQuery()
-        ->getResult()
-        ;
+        ->getResult();
     }
 }

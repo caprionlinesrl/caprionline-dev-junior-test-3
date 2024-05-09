@@ -135,6 +135,8 @@ const MovieItem = props => {
 const Search = props => {
   const [filterBy, setFilterBy] = useState('');
   const [order, setOrder] = useState('');
+  const [genre, setGenre] = useState('');
+
   const genreOptions = props.genres.map( item =>
     <option key={item.id} value={item.id}>
       {item.name}
@@ -142,7 +144,7 @@ const Search = props => {
   );
 
   const handleSearch = () => {
-    return fetch(`http://localhost:8000/movies/search?filter_by=${filterBy}&&order=${order}`)
+    return fetch(`http://localhost:8000/movies/search?filter_by=${filterBy}&&order=${order}&&genre=${genre}`)
     .then(response => response.json())
     .then(data => {
       props.setMovies(data)
@@ -171,7 +173,7 @@ const Search = props => {
 
       <div className="genre-wrapper">
         <Label value="Genre" />
-        <Select id="genre">
+        <Select id="genre" value={genre} onChange={(e) => setGenre(e.target.value)}>
           <option value="">Select ..</option>
           {genreOptions}
         </Select>
