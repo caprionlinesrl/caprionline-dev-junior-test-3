@@ -45,4 +45,12 @@ class MovieRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function filterBy($filterBy, $order){
+        return $this->createQueryBuilder('m')
+        ->orderBy("m.".$filterBy, $order)
+        ->getQuery()
+        ->getResult()
+        ;
+    }
 }

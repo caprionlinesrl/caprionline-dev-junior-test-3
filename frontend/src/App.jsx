@@ -23,7 +23,7 @@ const App = props => {
   return (
     <Layout>
       <Heading />
-      <Search/>
+      <Search setMovies={setMovies}/>
       <MovieList loading={loading}>
         {movies.map((item, key) => (
           <MovieItem key={key} {...item} />
@@ -131,25 +131,36 @@ const MovieItem = props => {
 };
 
 const Search = props => {
+  const [filterBy, setFilterBy] = useState('');
+  const [order, setOrder] = useState('');
+
+  const handleSearch = () => {
+    return fetch(`http://localhost:8000/movies/search?filter_by=${filterBy}&&order=${order}`)
+    .then(response => response.json())
+    .then(data => {
+      props.setMovies(data)
+    });
+  }
+
   return(
     <div className="mb-8 mx-auto flex space-x-4 items-center max-w-screen-sm ">
       <div className="filter-by-wrapper flex-1">
-        <Label htmlFor="countries" value="Order by" />
-        <Select id="filterBy">
+        <Label value="Order by" />
+        <Select id="filterBy" value={filterBy} onChange={(e) => setFilterBy(e.target.value)}>
           <option value="">Select ..</option>
           <option value="recent">Piu recenti</option>
           <option value="rating">Rating</option>
         </Select>
       </div>
       <div className="order-by-wrapper">
-        <Label htmlFor="countries" value="Direction" />
-        <Select id="order">
+        <Label value="Direction" />
+        <Select id="order" value={order} onChange={(e) => setOrder(e.target.value)}>
           <option value="">Select ..</option>
           <option value="ASC">Ascending</option>
           <option value="DESC">Descending</option>
         </Select>
       </div>
-      <Button size="xs">Apply Filter</Button>
+      <Button size="xs" onClick={handleSearch}>Apply Filter</Button>
     </div>
   );
 };
