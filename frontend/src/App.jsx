@@ -152,6 +152,7 @@ const Search = props => {
           <option value="rating">Rating</option>
         </Select>
       </div>
+
       <div className="order-by-wrapper">
         <Label value="Direction" />
         <Select id="order" value={order} onChange={(e) => setOrder(e.target.value)}>
@@ -160,6 +161,16 @@ const Search = props => {
           <option value="DESC">Descending</option>
         </Select>
       </div>
+
+      <div className="genre-wrapper">
+        <Label value="Genre" />
+        <Select id="genre">
+          <option value="">Select ..</option>
+          <option value="">Crime</option>
+          <option value="">Drama</option>
+        </Select>
+      </div>
+
       <Button size="xs" onClick={handleSearch}>Apply Filter</Button>
     </div>
   );
