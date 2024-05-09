@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Rating, Spinner } from 'flowbite-react';
+import { Button, Label, Rating, Select, Spinner } from 'flowbite-react';
 
 const App = props => {
   const [movies, setMovies] = useState([]);
@@ -23,7 +23,7 @@ const App = props => {
   return (
     <Layout>
       <Heading />
-
+      <Search/>
       <MovieList loading={loading}>
         {movies.map((item, key) => (
           <MovieItem key={key} {...item} />
@@ -126,6 +126,30 @@ const MovieItem = props => {
           : null
         }
       </div>
+    </div>
+  );
+};
+
+const Search = props => {
+  return(
+    <div className="mb-8 mx-auto flex space-x-4 items-center max-w-screen-sm ">
+      <div className="filter-by-wrapper flex-1">
+        <Label htmlFor="countries" value="Order by" />
+        <Select id="filterBy">
+          <option value="">Select ..</option>
+          <option value="recent">Piu recenti</option>
+          <option value="rating">Rating</option>
+        </Select>
+      </div>
+      <div className="order-by-wrapper">
+        <Label htmlFor="countries" value="Direction" />
+        <Select id="order">
+          <option value="">Select ..</option>
+          <option value="ASC">Ascending</option>
+          <option value="DESC">Descending</option>
+        </Select>
+      </div>
+      <Button size="xs">Apply Filter</Button>
     </div>
   );
 };
