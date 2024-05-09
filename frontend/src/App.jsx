@@ -151,6 +151,18 @@ const Search = props => {
     });
   }
 
+  const handleClearSearch = () => {
+    setFilterBy('');
+    setOrder('');
+    setGenre('');
+    
+    return fetch('http://localhost:8000/movies')
+      .then(response => response.json())
+      .then(data => {
+        props.setMovies(data.movies);
+    });
+  }
+
   return(
     <div className="mb-8 mx-auto flex space-x-4 items-center max-w-screen-sm ">
       <div className="filter-by-wrapper flex-1">
@@ -178,8 +190,11 @@ const Search = props => {
           {genreOptions}
         </Select>
       </div>
-
-      <Button size="xs" onClick={handleSearch}>Apply Filter</Button>
+      
+      <div className="action-buttons-wrapper space-y-2">
+        <Button size="xs" onClick={handleSearch}>Apply Filter</Button>
+        <Button size="xs" onClick={handleClearSearch}>Clear Filter</Button>
+      </div>
     </div>
   );
 };
