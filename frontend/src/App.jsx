@@ -4,6 +4,7 @@ import { Button, Label, Rating, Select, Spinner } from 'flowbite-react';
 const App = props => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [genres, setGenres] = useState([])
 
   const fetchMovies = () => {
     setLoading(true);
@@ -11,7 +12,8 @@ const App = props => {
     return fetch('http://localhost:8000/movies')
       .then(response => response.json())
       .then(data => {
-        setMovies(data);
+        setMovies(data.movies);
+        setGenres(data.genres)
         setLoading(false);
       });
   }
@@ -23,7 +25,7 @@ const App = props => {
   return (
     <Layout>
       <Heading />
-      <Search setMovies={setMovies}/>
+      <Search setMovies={setMovies} genres={genres}/>
       <MovieList loading={loading}>
         {movies.map((item, key) => (
           <MovieItem key={key} {...item} />
@@ -133,6 +135,11 @@ const MovieItem = props => {
 const Search = props => {
   const [filterBy, setFilterBy] = useState('');
   const [order, setOrder] = useState('');
+  const genreOptions = props.genres.map( item =>
+    <option key={item.id} value={item.id}>
+      {item.name}
+    </option>
+  );
 
   const handleSearch = () => {
     return fetch(`http://localhost:8000/movies/search?filter_by=${filterBy}&&order=${order}`)
@@ -166,8 +173,7 @@ const Search = props => {
         <Label value="Genre" />
         <Select id="genre">
           <option value="">Select ..</option>
-          <option value="">Crime</option>
-          <option value="">Drama</option>
+          {genreOptions}
         </Select>
       </div>
 
