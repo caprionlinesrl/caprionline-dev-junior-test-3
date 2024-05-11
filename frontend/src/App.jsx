@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Rating, Spinner } from 'flowbite-react';
+import { Button, Rating, Spinner, Navbar, Dropdown } from 'flowbite-react';
+const genres = ["Azione","Avventura","Animazione","Commedia","Crimine","Dramma","Famiglia","Fantasia", "Storia","Orrore","Musica", "Mistero", "Romantico", "Fantascienza", "Sport", "Romazo Giallo", "Guerra"];
+let i=1;
+let genresList = genres.map(function(genre){
+  let url ="/movies?data="+i;
+  i++;
+  return (
+      <Dropdown.Item>
+        <Navbar.Link href={url}>
+          {genre}
+        </Navbar.Link>
+      </Dropdown.Item>
+  )
+})
 
 const App = props => {
   const [movies, setMovies] = useState([]);
@@ -8,7 +21,8 @@ const App = props => {
   const fetchMovies = () => {
     setLoading(true);
 
-    return fetch('http://localhost:8000/movies')
+
+    return fetch('http://localhost:8000/movies'+window.location.search)
       .then(response => response.json())
       .then(data => {
         setMovies(data);
@@ -23,7 +37,7 @@ const App = props => {
   return (
     <Layout>
       <Heading />
-
+      <Filters/>
       <MovieList loading={loading}>
         {movies.map((item, key) => (
           <MovieItem key={key} {...item} />
@@ -56,6 +70,40 @@ const Heading = props => {
     </div>
   );
 };
+const Filters = props =>{
+  if (props.loading) {
+    return
+  }
+  return (
+        <Navbar fluid rounded>      
+          <div className="flex md:order-2">
+        <Navbar.Toggle />
+          </div>
+        <Navbar.Collapse>
+        <Dropdown label="Ordina per" dismissOnClick={false}>
+          <Dropdown.Item>
+            <Navbar.Link href="/movies?data=recent" active>
+              Più recenti
+            </Navbar.Link>
+          </Dropdown.Item>
+          <Dropdown.Item>
+            <Navbar.Link href="/movies?data=highest" active>
+              Rating più alto
+            </Navbar.Link>
+          </Dropdown.Item>
+          <Dropdown.Item>
+            <Navbar.Link href="/movies?data=lowest" active>
+              Rating più basso
+            </Navbar.Link>
+          </Dropdown.Item>
+        </Dropdown>
+        <Dropdown label="Filtri" dismissOnClick={false}>
+            {genresList}
+        </Dropdown>
+        </Navbar.Collapse>
+      </Navbar>
+    );
+}
 
 const MovieList = props => {
   if (props.loading) {
@@ -67,8 +115,10 @@ const MovieList = props => {
   }
 
   return (
-    <div className="grid gap-4 md:gap-y-8 xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3">
-      {props.children}
+    <div>
+      <div className="grid gap-4 md:gap-y-8 xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3">
+        {props.children}
+      </div>
     </div>
   );
 };
