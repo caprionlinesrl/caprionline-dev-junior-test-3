@@ -124,23 +124,23 @@ const MovieList = props => {
   return (
     <>
       {/* aggiungo un form per la ricerca dei film tramite nome e per ordinarli in modo crescente o decrescente */}
-      <form action="" className='mt-2 mb-2 flex'>
-        <input type="text" className='shadow appearance-none border rounded w-full py-2 px-3 me-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' onChange={props.onSearch}/>
+      <form action="" className='mt-2 mb-2 mx-10'>
+        <input type="text" placeholder='Search...' className='block shadow appearance-none border rounded w-full py-2 px-3 me-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' onChange={props.onSearch}/>
         
-        <div>
-          <div>
+        {/* creo degli input type radiobox per ordinare tramite anno o rating */}
+        <h6>Order by</h6>
+        <div className='flex justify-between'>
+            {/* orninare tramite anno */}
+          <div className='me-5'>
             <input
-               type="radio"
-               id="ascYear"
-               name="sortOrderYear"
-               value="asc"
-               checked={props.sortByYear.order === 'asc'}
-               onChange={() => props.toggleOrder('year')}
+              type="radio"
+              id="ascYear"
+              name="sortOrderYear"
+              value="asc"
+              checked={props.sortByYear.order === 'asc'}
+              onChange={() => props.toggleOrder('year')}
             />
-            <label htmlFor="ascYear">Crescente per anno</label>
-          </div>
-
-          <div>
+            <label className='mx-2' htmlFor="ascYear">Year &#8593; </label>
             <input
               type="radio"
               id="descYear"
@@ -149,10 +149,11 @@ const MovieList = props => {
               checked={props.sortByYear.order === 'desc'}
               onChange={() => props.toggleOrder('year')}
             />
-            <label htmlFor="descYear">Decrescente per anno</label>
+            <label className='mx-2' htmlFor="descYear">Year &#8595; </label>
           </div>
 
-          <div>
+          {/* orninare tramite voto */}
+          <div className='ms-5'>
             <input
               type="radio"
               id="ascRating"
@@ -161,7 +162,7 @@ const MovieList = props => {
               checked={props.sortByRating.order === 'asc'}
               onChange={() => props.toggleOrder('rating')}
             />
-            <label htmlFor="ascRating">Crescente per rating</label>
+            <label className='mx-2' htmlFor="ascRating">Rating &#8593;</label>
 
             <input
               type="radio"
@@ -171,9 +172,9 @@ const MovieList = props => {
               checked={props.sortByRating.order === 'desc'}
               onChange={() => props.toggleOrder('rating')}
             />
-            <label htmlFor="descRating">Decrescente per rating</label>
+            <label className='mx-2' htmlFor="descRating">Rating &#8595;g</label>
           </div>
-      </div>
+        </div>
       {/* Fine del gruppo di radio button */}
 
       </form>
