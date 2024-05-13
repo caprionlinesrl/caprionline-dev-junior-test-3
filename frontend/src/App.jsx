@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Button, Rating, Spinner } from 'flowbite-react';
 
 const App = props => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+
+
+
+
 
   // creo una funzione che mi riporti il valore dell'input in modo tale da poter filtrare l'array dei film
   const [query, setQuery]= useState("");
@@ -17,12 +21,28 @@ const App = props => {
   //  //creo una funzione che mi riporti il valore dell'input in modo tale da poter filtrare l'array dei film //
 
   // creo una funzione che mi permetta di ordinare i film al clickdi un bottone
-  const[orderMovie, setOrder] = useState(true);
-  
-  const toggleOrderMovies = () => {
-    setOrder = (!orderMovie)
-  }
+  const [sortByYear, setSortByYear] = useState({ order: 'asc', sorted: false });
+
+  // use Memo è una hook di React che permette in questo caso di memorizzare il risultato di una funzione 
+    const sortedMovies = useMemo(() => {
+      const sorted = [...filteredMovies].sort((a, b) => {
+        return sortByYear.order === 'asc' ? a.year - b.year : b.year - a.year;
+      });
+      return sorted;
+    }, [filteredMovies, sortByYear]);
+
+    const toggleSortOrder = () => {
+      setSortByYear({ ...sortByYear, order: sortByYear.order === 'asc' ? 'desc' : 'asc' });
+    };
+
+    const sortedYear = () => {
+      setSortByYear({ order: sortByYear.order === 'asc' ? 'desc' : 'asc', sorted: true });
+    };
   // // creo una funzione che mi permetta di ordinare i film al clickdi un bottone //
+
+
+
+
 
   const fetchMovies = () => {
     setLoading(true);
@@ -45,8 +65,8 @@ const App = props => {
       <Heading />
 
       {/* porto handleChangeText dentro il componente movieList (onSearch) */}
-      <MovieList onSearch={handleChangeText} loading={loading}>
-        {filteredMovies.map((item, key) => (
+      <MovieList onSearch={handleChangeText} loading={loading} orderByYear={sortedYear} toggleOrder={toggleSortOrder} orderMovies={sortedMovies}>
+        {sortedMovies .map((item, key) => (
           <MovieItem key={key} {...item} />
         ))}
       </MovieList>
@@ -90,10 +110,13 @@ const MovieList = props => {
 
   return (
     <>
-      {/* aggiungo un form per la ricerca dei film tramite nome */}
+      {/* aggiungo un form per la ricerca dei film tramite nome e per ordinarli in modo crescente o decrescente */}
       <form action="" className='mt-2 mb-2'>
-          <input type="text" className='text-gray-700 text-sm font-bold mb-2 me-2' onChange={props.onSearch}/>
-          
+        <input type="text" className='text-gray-700 text-sm font-bold mb-2 me-2' onChange={props.onSearch}/>
+        <button type='button' onClick={props.orderByYear}>Ordina per anno</button>
+        <button type='button' onClick={props.toggleOrder}>
+          {props.orderMovies ? 'Ordine decrescente' : 'Ordine crescente'}
+        </button>
       </form>
       {/* //aggiungo un form per la ricerca dei film tramite nome// */}
 
