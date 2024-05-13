@@ -4,7 +4,17 @@ import { Button, Rating, Spinner } from 'flowbite-react';
 const App = props => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // creo una funzione che mi riporti il valore dell'input in modo tale da poter filtrare l'array dei film
   const [query, setQuery]= useState("");
+
+  const handleChangeText = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+  } 
+  
+  const filteredMovies = movies.filter(movie => movie.title.toLowerCase().includes(query.toLowerCase()))
+  //  //creo una funzione che mi riporti il valore dell'input in modo tale da poter filtrare l'array dei film //
 
   const fetchMovies = () => {
     setLoading(true);
@@ -26,8 +36,9 @@ const App = props => {
     <Layout>
       <Heading />
 
-      <MovieList loading={loading}>
-        {movies.map((item, key) => (
+      {/* porto handleChangeText dentro il componente movieList (onSearch) */}
+      <MovieList onSearch={handleChangeText} loading={loading}>
+        {filteredMovies.map((item, key) => (
           <MovieItem key={key} {...item} />
         ))}
       </MovieList>
@@ -68,16 +79,12 @@ const MovieList = props => {
     );
   }
 
-  const handleChangeText = (e) => {
-    const value = e.target.value;
-    setQuery(value);
-  } 
 
   return (
     <>
       {/* aggiungo un form per la ricerca dei film tramite nome */}
-      <form action="" className='mt-2 mb-2' query>
-          <input type="text" className='text-gray-700 text-sm font-bold mb-2 me-2' onChange={handleChangeText} />
+      <form action="" className='mt-2 mb-2'>
+          <input type="text" className='text-gray-700 text-sm font-bold mb-2 me-2' onChange={props.onSearch}/>
           <button type='submit' className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded'>Search</button>
       </form>
       {/* //aggiungo un form per la ricerca dei film tramite nome// */}
