@@ -4,13 +4,12 @@ import { Button, Rating, Spinner } from 'flowbite-react';
 const App = props => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
-
-
-
-
-
   // creo una funzione che mi riporti il valore dell'input in modo tale da poter filtrare l'array dei film
   const [query, setQuery]= useState("");
+  // creo una funzione che mi permetta di ordinare i film al click di un bottone
+  const [sortByYear, setSortByYear] = useState({ order: 'asc', sorted: false });
+  const [sortByRating, setSortByRating] = useState({ order: 'asc', sorted: false });
+  const [selectedOption, setSelectedOption] = useState('');
 
   const handleChangeText = (e) => {
     const value = e.target.value;
@@ -20,29 +19,37 @@ const App = props => {
   const filteredMovies = movies.filter(movie => movie.title.toLowerCase().includes(query.toLowerCase()))
   //  //creo una funzione che mi riporti il valore dell'input in modo tale da poter filtrare l'array dei film //
 
-  // creo una funzione che mi permetta di ordinare i film al clickdi un bottone
-  const [sortByYear, setSortByYear] = useState({ order: 'asc', sorted: false });
-
   // use Memo è una hook di React che permette in questo caso di memorizzare il risultato di una funzione 
-    const sortedMovies = useMemo(() => {
-      const sorted = [...filteredMovies].sort((a, b) => {
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+
+  const sortedMovies = useMemo(() => {
+    let sorted = [...filteredMovies];
+    if (sortByYear.sorted) {
+      sorted = sorted.sort((a, b) => {
         return sortByYear.order === 'asc' ? a.year - b.year : b.year - a.year;
       });
-      return sorted;
-    }, [filteredMovies, sortByYear]);
+    }
+    if (sortByRating.sorted) {
+      sorted = sorted.sort((a, b) => {
+        return sortByRating.order === 'asc' ? a.rating - b.rating : b.rating - a.rating;
+      });
+    }
+    return sorted;
+  }, [filteredMovies, sortByYear, sortByRating]);
 
-    const toggleSortOrder = () => {
-      setSortByYear({ ...sortByYear, order: sortByYear.order === 'asc' ? 'desc' : 'asc' });
-    };
-
-    const sortedYear = () => {
-      setSortByYear({ order: sortByYear.order === 'asc' ? 'desc' : 'asc', sorted: true });
-    };
+  const toggleSortOrder = (type) => {
+    if (type === 'year') {
+      const newOrder = sortByYear.order === 'asc' ? 'desc' : 'asc';
+      setSortByYear({ ...sortByYear, order: newOrder, sorted: true });
+      setSortByRating({ ...sortByRating, sorted: false });
+    } else if (type === 'rating') {
+      setSortByRating({ ...sortByRating, order: sortByRating.order === 'asc' ? 'desc' : 'asc', sorted: true });
+      setSortByYear({ ...sortByYear, sorted: false });
+    }
+  };
   // // creo una funzione che mi permetta di ordinare i film al clickdi un bottone //
-
-
-
-
 
   const fetchMovies = () => {
     setLoading(true);
@@ -65,7 +72,14 @@ const App = props => {
       <Heading />
 
       {/* porto handleChangeText dentro il componente movieList (onSearch) */}
-      <MovieList onSearch={handleChangeText} loading={loading} orderByYear={sortedYear} toggleOrder={toggleSortOrder} orderMovies={sortedMovies}>
+      <MovieList 
+        sortByYear={sortByYear} 
+        sortByRating={sortByRating}
+        toggleOrder={toggleSortOrder} 
+        orderMovies={sortByYear.order}
+        changeOption={handleOptionChange} 
+        onSearch={handleChangeText} 
+        loading={loading}>
         {sortedMovies .map((item, key) => (
           <MovieItem key={key} {...item} />
         ))}
@@ -107,18 +121,64 @@ const MovieList = props => {
     );
   }
 
-
   return (
     <>
       {/* aggiungo un form per la ricerca dei film tramite nome e per ordinarli in modo crescente o decrescente */}
-      <form action="" className='mt-2 mb-2'>
-        <input type="text" className='text-gray-700 text-sm font-bold mb-2 me-2' onChange={props.onSearch}/>
-        <button type='button' onClick={props.orderByYear}>Ordina per anno</button>
-        <button type='button' onClick={props.toggleOrder}>
-          {props.orderMovies ? 'Ordine decrescente' : 'Ordine crescente'}
-        </button>
+      <form action="" className='mt-2 mb-2 flex'>
+        <input type="text" className='shadow appearance-none border rounded w-full py-2 px-3 me-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' onChange={props.onSearch}/>
+        
+        <div>
+          <div>
+            <input
+               type="radio"
+               id="ascYear"
+               name="sortOrderYear"
+               value="asc"
+               checked={props.sortByYear.order === 'asc'}
+               onChange={() => props.toggleOrder('year')}
+            />
+            <label htmlFor="ascYear">Crescente per anno</label>
+          </div>
+
+          <div>
+            <input
+              type="radio"
+              id="descYear"
+              name="sortOrderYear"
+              value="desc"
+              checked={props.sortByYear.order === 'desc'}
+              onChange={() => props.toggleOrder('year')}
+            />
+            <label htmlFor="descYear">Decrescente per anno</label>
+          </div>
+
+          <div>
+            <input
+              type="radio"
+              id="ascRating"
+              name="sortOrderRating"
+              value="asc"
+              checked={props.sortByRating.order === 'asc'}
+              onChange={() => props.toggleOrder('rating')}
+            />
+            <label htmlFor="ascRating">Crescente per rating</label>
+
+            <input
+              type="radio"
+              id="descRating"
+              name="sortOrderRating"
+              value="desc"
+              checked={props.sortByRating.order === 'desc'}
+              onChange={() => props.toggleOrder('rating')}
+            />
+            <label htmlFor="descRating">Decrescente per rating</label>
+          </div>
+      </div>
+      {/* Fine del gruppo di radio button */}
+
       </form>
       {/* //aggiungo un form per la ricerca dei film tramite nome// */}
+      
 
       <div className="grid gap-4 md:gap-y-8 xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3">
         {props.children}
