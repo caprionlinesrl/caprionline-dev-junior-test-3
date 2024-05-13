@@ -4,6 +4,7 @@ import { Button, Rating, Spinner } from 'flowbite-react';
 const App = props => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [query, setQuery]= useState("");
 
   const fetchMovies = () => {
     setLoading(true);
@@ -13,7 +14,8 @@ const App = props => {
       .then(data => {
         setMovies(data);
         setLoading(false);
-      });
+      }
+    );
   }
 
   useEffect(() => {
@@ -66,13 +68,17 @@ const MovieList = props => {
     );
   }
 
+  const handleChangeText = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+  } 
+
   return (
     <>
       {/* aggiungo un form per la ricerca dei film tramite nome */}
-      <form action="" className='mt-2 mb-2'>
-          <input type="text" className='text-gray-700 text-sm font-bold mb-2 me-2'/>
+      <form action="" className='mt-2 mb-2' query>
+          <input type="text" className='text-gray-700 text-sm font-bold mb-2 me-2' onChange={handleChangeText} />
           <button type='submit' className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded'>Search</button>
-          <p>{console.log(props.children[0])}</p>
       </form>
       {/* //aggiungo un form per la ricerca dei film tramite nome// */}
 
