@@ -172,7 +172,7 @@ const MovieList = props => {
               checked={props.sortByRating.order === 'desc'}
               onChange={() => props.toggleOrder('rating')}
             />
-            <label className='mx-2' htmlFor="descRating">Rating &#8595;g</label>
+            <label className='mx-2' htmlFor="descRating">Rating &#8595;</label>
           </div>
         </div>
       {/* Fine del gruppo di radio button */}
